@@ -1,5 +1,6 @@
 import { Resend } from "resend"
 import { NextResponse } from "next/server"
+import { z } from "zod"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -25,14 +26,6 @@ function checkRateLimit(ip: string): { allowed: boolean; remaining: number; rese
 
   return { allowed: true, remaining: MAX_REQUESTS - entry.count, resetAt: entry.resetAt }
 }
-
-// Clean up expired entries every 5 minutes
-setInterval(() => {
-  const now = Date.now()
-  for (const [ip, entry] of rateLimit) {
-    if (now > entry.resetAt) rateLimit.delete(ip)
-  }
-}, 300_000)
 
 function validateOrigin(request: Request): boolean {
   const origin = request.headers.get("origin")
@@ -97,8 +90,8 @@ export async function POST(request: Request) {
       )
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
+    const parsed = z.string().email().safeParse(email)
+    if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid email format" },
         { status: 400 }
@@ -130,6 +123,10 @@ export async function POST(request: Request) {
 
       if (segError) {
         console.error("Segment error:", segError)
+        return NextResponse.json(
+          { error: "Failed to join waitlist" },
+          { status: 500 }
+        )
       }
     }
 
