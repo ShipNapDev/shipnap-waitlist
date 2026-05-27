@@ -190,6 +190,10 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <span className="text-sm font-semibold text-foreground">ShipNap</span>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <a href="/privacy" className="hover:text-foreground transition-colors">Privacy</a>
+              <a href="/terms" className="hover:text-foreground transition-colors">Terms</a>
+            </div>
             <p className="text-sm text-muted-foreground">
               © 2026 ShipNap. All rights reserved.
             </p>
