@@ -75,7 +75,7 @@ export function WaitlistForm() {
               Sending...
             </span>
           ) : (
-            "Get Early Access"
+            "Join the Waitlist"
           )}
         </Button>
       </div>

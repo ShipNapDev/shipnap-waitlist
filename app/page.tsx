@@ -25,11 +25,11 @@ export default function Home() {
         <div className="relative mx-auto max-w-6xl px-6">
           <div className="flex flex-col items-center text-center">
             <h1 className="mb-6 max-w-4xl text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl md:text-6xl lg:text-7xl">
-              AI agents that code while you sleep
+              Describe a task. Wake up to a pull request.
             </h1>
 
             <p className="mb-8 max-w-2xl text-lg text-muted-foreground text-balance md:text-xl">
-              Connect a repo, bring your own API key, pick a model, and wake up to a pull request.
+              ShipNap runs an AI agent against your repo — using your own API key, on your choice of model. No markup. No lock-in. Nothing stored.
             </p>
 
             <div className="w-full max-w-md">
@@ -57,7 +57,7 @@ export default function Home() {
               How it works
             </h2>
             <p className="text-muted-foreground">
-              From GitHub issue to merged PR — while you sleep
+              Four steps from description to pull request
             </p>
           </div>
 
@@ -67,22 +67,22 @@ export default function Home() {
             <StepCard
               number="1"
               title="Connect"
-              description="Link your GitHub repository with one click"
+              description="Authorize access to any GitHub repo. Public or private."
             />
             <StepCard
               number="2"
-              title="Configure"
-              description="Add your API key and choose your preferred model"
+              title="Describe"
+              description="Write the task in plain English, like you'd explain it to a coworker."
             />
             <StepCard
               number="3"
-              title="Deploy"
-              description="Point the agent at an issue and hit deploy"
+              title="Ship"
+              description="The agent writes the code, runs tests, and opens a pull request."
             />
             <StepCard
               number="4"
-              title="Wake Up"
-              description="Wake up to a polished pull request, ready to merge"
+              title="Review"
+              description="Review clean commits, check test output, merge when ready."
             />
           </div>
         </div>
@@ -93,10 +93,10 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center">
             <h2 className="mb-3 text-3xl font-bold text-foreground md:text-4xl">
-              Built for developers
+              Your code. Your model. Your key.
             </h2>
             <p className="text-muted-foreground">
-              No lock-in, no markup, no nonsense
+              ShipNap handles the orchestration — cloning, branching, committing, opening the PR. You control everything else.
             </p>
           </div>
 
@@ -108,7 +108,7 @@ export default function Home() {
                 </svg>
               }
               title="Any GitHub Repo"
-              description="Works with public and private repositories. Just connect and go."
+              description="Connect public or private repos. You control which repositories ShipNap can access at all times."
             />
             <FeatureCard
               icon={
@@ -117,7 +117,7 @@ export default function Home() {
                 </svg>
               }
               title="Bring Your Own Key"
-              description="Use your own API keys. Full control, no middleman markup."
+              description="Paste your Anthropic, OpenAI, or Google key. Your provider bills you at their standard rate — we add nothing."
             />
             <FeatureCard
               icon={
@@ -126,7 +126,7 @@ export default function Home() {
                 </svg>
               }
               title="Any Model"
-              description="GPT-5.5, Claude Opus 4.7, Gemini 3.1 Pro — you pick. No vendor lock-in."
+              description="Claude, GPT, Gemini — whichever model handles your codebase best. Change models between tasks without changing tools."
             />
             <FeatureCard
               icon={
@@ -135,7 +135,7 @@ export default function Home() {
                 </svg>
               }
               title="Secure by Design"
-              description="Your code stays yours. We never store or train on your data."
+              description="Source code flows from your repo through the model to a PR branch. ShipNap doesn't store, cache, log, or train on your code."
             />
             <FeatureCard
               icon={
@@ -144,7 +144,7 @@ export default function Home() {
                 </svg>
               }
               title="Sleep & Ship"
-              description="Deploy before bed. Wake up to a ready-to-merge PR."
+              description="Queue a task at the end of your day. Wake up to a PR with commits, tests, and a change summary."
             />
             <FeatureCard
               icon={
@@ -153,7 +153,7 @@ export default function Home() {
                 </svg>
               }
               title="Clean Pull Requests"
-              description="Well-structured commits, proper descriptions, and passing tests."
+              description="Every PR lands with atomic commits, a clear description, test results, and decision notes for nontrivial changes."
             />
           </div>
         </div>
@@ -169,10 +169,10 @@ export default function Home() {
 
             <div className="relative flex flex-col items-center text-center">
               <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl text-balance">
-                Ready to ship while you sleep?
+                Try it on your own repo.
               </h2>
               <p className="mb-6 max-w-lg text-muted-foreground">
-                Get early access and be the first to try ShipNap.
+                We're onboarding developers in small batches. Join the waitlist to get early access.
               </p>
               <div className="mb-4 w-full max-w-md">
                 <WaitlistForm />

@@ -4,34 +4,34 @@ import { useEffect, useState } from "react"
 
 const steps = [
   {
-    label: "Connected repository",
-    detail: "github.com/acme/webapp",
+    label: "Repository connected",
+    detail: "acme/webapp",
     delay: 800,
   },
   {
     label: "API key validated",
-    detail: "claude-opus-4-7",
+    detail: "your-api-key",
     delay: 1200,
   },
   {
-    label: "Agent spawned",
-    detail: "issue #142",
+    label: "Task received",
+    detail: "“Add rate limiting…”",
     delay: 1600,
   },
 ]
 
 const tasks = [
-  { label: "Reading issue description…", delay: 2200 },
+  { label: "Reading task description…", delay: 2200 },
   { label: "Cloning repository…", delay: 2600 },
-  { label: "Analyzing codebase structure…", delay: 3000 },
-  { label: "Identifying relevant files…", delay: 3400 },
-  { label: "Implementing feature…", delay: 3800 },
-  { label: "Writing tests…", delay: 4200 },
-  { label: "Running test suite…", delay: 4600 },
-  { label: "Linting and formatting…", delay: 5000 },
+  { label: "Analyzing codebase…", delay: 3000 },
+  { label: "Implementing changes…", delay: 3400 },
+  { label: "Writing tests…", delay: 3800 },
+  { label: "Running test suite…", delay: 4200 },
+  { label: "Writing PR description…", delay: 4600 },
+  { label: "Pushing branch…", delay: 5000 },
 ]
 
-const done = { label: "Pull request created", detail: "#143", url: "https://github.com/acme/webapp/pull/143", delay: 5400 }
+const done = { label: "Pull request opened", detail: "PR #143", title: "feat: add rate limiting to auth endpoints", url: "https://github.com/acme/webapp/pull/143", delay: 5400 }
 
 function CheckIcon() {
   return (
@@ -88,7 +88,7 @@ export function DeployPreview() {
         </div>
         <div>
           <p className="text-sm font-semibold text-foreground">acme/webapp</p>
-          <p className="text-xs text-muted-foreground">issue #142 &middot; claude-opus-4-7</p>
+          <p className="text-xs text-muted-foreground">Add rate limiting to auth endpoints &middot; claude-sonnet</p>
         </div>
         {phase === "running" && (
           <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-foreground">
@@ -164,6 +164,7 @@ export function DeployPreview() {
             <span className="text-sm font-semibold text-foreground">{done.label}</span>
             <span className="font-mono text-sm text-foreground">{done.detail}</span>
           </div>
+          <p className="mb-1 font-mono text-xs font-medium text-foreground">{done.title}</p>
           <p className="font-mono text-xs text-muted-foreground">{done.url}</p>
         </div>
       )}
