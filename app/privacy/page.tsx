@@ -1,5 +1,13 @@
+import type { Metadata } from "next"
 import Link from "next/link";
 import { SiteNav, SiteFooter } from "@/components/site-layout";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy — ShipNap",
+  description:
+    "How ShipNap handles your data, repositories, AI provider keys, and personal information.",
+  alternates: { canonical: "/privacy" },
+}
 
 const sections = [
   {

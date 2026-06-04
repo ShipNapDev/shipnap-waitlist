@@ -1,5 +1,13 @@
+import type { Metadata } from "next"
 import Link from "next/link";
 import { SiteNav, SiteFooter } from "@/components/site-layout";
+
+export const metadata: Metadata = {
+  title: "Terms of Service — ShipNap",
+  description:
+    "Terms governing your use of ShipNap — accounts, repositories, AI providers, billing, and acceptable use.",
+  alternates: { canonical: "/terms" },
+}
 
 const sections = [
   {

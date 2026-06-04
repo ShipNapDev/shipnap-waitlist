@@ -75,6 +75,7 @@ export async function generateMetadata({
   return {
     title: `${meta.title} — ShipNap Blog`,
     description: meta.description,
+    alternates: { canonical: `/blog/${slug}` },
   }
 }
 
@@ -118,7 +119,7 @@ export default async function BlogPostPage({
               keywords: meta.tags.join(", "),
               url: `https://shipnap.dev/blog/${slug}`,
               isAccessibleForFree: true,
-            }),
+            }).replace(/<\//g, "<\\/"),
           }}
         />
       )}

@@ -9,7 +9,7 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <SiteNav />
 
-      {/* Hero Section */}
+      <main>{/* Hero Section */}
       <section className="relative pt-28 pb-8 md:pt-32 md:pb-14">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute inset-0 bg-[linear-gradient(var(--grid-color)_1px,transparent_1px),linear-gradient(90deg,var(--grid-color)_1px,transparent_1px)] bg-[size:64px_64px] [--grid-color:rgba(128,128,128,0.08)]" />
@@ -178,6 +178,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      </main>
 
       <SiteFooter />
     </div>

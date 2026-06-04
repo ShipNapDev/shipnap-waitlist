@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "ShipNap Blog — Thoughts on AI, Code, and Shipping",
   description:
     "Deep dives on AI-powered development, prompt engineering, and building tools that write code.",
+  alternates: { canonical: "/blog" },
 }
 
 export default function BlogLayout({
