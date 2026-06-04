@@ -31,8 +31,21 @@ function getPostMetadata(filePath: string): PostMetadata | null {
   return { title, description, date, tags }
 }
 
+function getContentDir() {
+  return path.resolve(process.cwd(), "content")
+}
+
+function getSafeFilePath(slug: string): string | null {
+  // Only allow safe slug characters — prevents path traversal
+  const safeSlug = slug.replace(/[^a-zA-Z0-9_-]/g, "")
+  if (!safeSlug) return null
+  const resolved = path.resolve(getContentDir(), `${safeSlug}.mdx`)
+  if (!resolved.startsWith(getContentDir() + path.sep)) return null
+  return resolved
+}
+
 function getSlugs(): string[] {
-  const contentDir = path.join(process.cwd(), "content")
+  const contentDir = getContentDir()
   if (!fs.existsSync(contentDir)) return []
   return fs
     .readdirSync(contentDir)
@@ -52,9 +65,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const filePath = path.join(process.cwd(), "content", `${slug}.mdx`)
+  const filePath = getSafeFilePath(slug)
 
-  if (!fs.existsSync(filePath)) return {}
+  if (!filePath || !fs.existsSync(filePath)) return {}
 
   const meta = getPostMetadata(filePath)
   if (!meta) return {}
@@ -71,9 +84,9 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const filePath = path.join(process.cwd(), "content", `${slug}.mdx`)
+  const filePath = getSafeFilePath(slug)
 
-  if (!fs.existsSync(filePath)) notFound()
+  if (!filePath || !fs.existsSync(filePath)) notFound()
 
   const meta = getPostMetadata(filePath)
 
