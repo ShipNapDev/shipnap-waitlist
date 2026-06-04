@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SiteNav, SiteFooter } from "@/components/site-layout";
 
 const sections = [
   {
@@ -113,13 +114,7 @@ const sections = [
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-background">
-      <nav className="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center px-6">
-          <Link href="/" className="text-lg font-bold text-foreground hover:opacity-80 transition-opacity">
-            ShipNap
-          </Link>
-        </div>
-      </nav>
+      <SiteNav />
 
       <main className="mx-auto max-w-3xl px-6 pt-28 pb-16">
         <h1 className="mb-2 text-3xl font-bold text-foreground">Privacy Policy</h1>
@@ -142,14 +137,7 @@ export default function PrivacyPage() {
         </div>
       </main>
 
-      <footer className="border-t border-border py-10">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <Link href="/" className="text-sm font-semibold text-foreground hover:opacity-80">ShipNap</Link>
-            <p className="text-sm text-muted-foreground">© 2026 ShipNap. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

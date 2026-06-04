@@ -2,18 +2,12 @@ import { WaitlistForm } from "@/components/waitlist-form"
 import { DeployPreview } from "@/components/deploy-preview"
 import { FeatureCard } from "@/components/feature-card"
 import { StepCard } from "@/components/step-card"
-import { ModeToggle } from "@/components/theme-toggle"
+import { SiteNav, SiteFooter } from "@/components/site-layout"
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <span className="text-lg font-bold text-foreground">ShipNap</span>
-          <ModeToggle />
-        </div>
-      </nav>
+      <SiteNav />
 
       {/* Hero Section */}
       <section className="relative pt-28 pb-8 md:pt-32 md:pb-14">
@@ -185,21 +179,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-10">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <span className="text-sm font-semibold text-foreground">ShipNap</span>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <a href="/privacy" className="hover:text-foreground transition-colors">Privacy</a>
-              <a href="/terms" className="hover:text-foreground transition-colors">Terms</a>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              © 2026 ShipNap. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }

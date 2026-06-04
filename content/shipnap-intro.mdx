@@ -1,0 +1,66 @@
+export const metadata = {
+  title: "I Built an AI Coding Agent. I Don't Trust AI Coding Agents.",
+  description:
+    "ShipNap connects to your repo, writes code while you sleep, and opens a PR. Here's why I built it to never touch your source code.",
+  date: "2026-06-04",
+  tags: ["AI", "Developer Tools"],
+}
+
+I spent six months building an AI coding agent. Three months in, I almost killed it.
+
+The models were fine. Claude writes decent code. GPT writes decent code. The problem was the architecture. Every design I drew had a server sitting between your repo and the model. That server had to clone your code, read it, generate diffs from it. And the moment it existed, it became a target. A liability. Something you had to audit and pray nobody breached.
+
+I would not use a tool that proxies my source code through someone else's machine. So I could not build one.
+
+## The thing nobody talks about
+
+Every AI coding tool does the same thing under the hood. It reads your code, sends it to a model, gets suggestions back. The differences are UI. Tabs vs chat. Inline vs sidebar. But the architecture is identical: a service sits between your repo and the model.
+
+For side projects, fine. For a real codebase with real customers and real compliance requirements? Hard no for most teams I talk to. Legal kills it before the first commit.
+
+Here is the part that gets weird. The AI companies already solved the trust side. Anthropic does not train on API traffic. OpenAI does not train on API traffic. Google does not train on API traffic. The model providers are not the risk. The proxy is.
+
+So I asked: what if there was no proxy?
+
+## How it works
+
+ShipNap handles orchestration only. It clones your repo, creates a branch, coordinates the agent loop. But the inference calls go directly from your API key to the model provider. Your code moves from GitHub to Claude, or GPT, or Gemini, and back to a PR branch. ShipNap never touches it.
+
+What that means in practice:
+
+- No source code stored, cached, or logged on our servers
+- No vendor lock-in. Bring your own key, pick any model, switch any time
+- No markup. Your provider bills you at their standard rate
+- No black-box prompts. You can inspect and tune the system prompt yourself
+
+You need an API key. For the people this is built for, that is not a downside. It is table stakes.
+
+## Does it work?
+
+Sometimes. Sometimes it does not. Same as every AI tool.
+
+It does well on scoped tasks. "Add rate limiting to the login endpoint." "Migrate the user table for avatar_url." "Write tests for the billing module." You get a PR with commit messages, test output, and notes on anything non-obvious it decided.
+
+On large ambiguous tasks it struggles. Same as a human junior dev who got a vague ticket at 4:45 PM on a Friday. The models are not magic. They are tools. Good ones, improving fast, but tools.
+
+I am saying this because the AI coding space is drowning in hype. Everything is revolutionary, game-changing, the future of software. Most of it ships features the models wrote three months ago and nobody reviewed. I am not bitter. I am just someone who has used these tools enough to know when they help and when they burn my time.
+
+## Why BYOK matters
+
+Bring Your Own Key is not a pricing decision. It is an architectural one.
+
+When you hold the key, the threat model collapses to something manageable. The orchestration layer cannot read your code because it does not proxy the calls. Only three parties ever see your source: your repo, your machine, and the model provider. Who, again, is not training on it.
+
+You also control the model. Different tasks want different models. Claude Opus for architecture refactors. GPT for straightforward CRUD. Gemini when you need a 2M token context window. With BYOK you switch per task. Nobody else decides for you.
+
+And yes, the cost difference is real. A $30 subscription that caps you at 50 requests a day versus $20 in API credits that gets you hundreds of calls on the latest model. The math is not subtle.
+
+## What this is not
+
+ShipNap is not a replacement for Claude Code or Copilot or Cursor. Those are interactive. You use them while coding. ShipNap runs while you sleep, or sit in meetings, or go outside. It does the task, opens the PR, waits for review.
+
+You should review the PR. You should have tests. If the idea of an AI opening PRs on your repo bothers you, that is fair. This tool is probably not for you.
+
+If it makes you curious, and you have an API key, and you understand that every model gets things wrong sometimes, give it a shot.
+
+We are onboarding in small batches. Join the waitlist at shipnap.dev.
