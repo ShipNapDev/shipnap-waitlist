@@ -12,7 +12,9 @@ The models were fine. Claude writes decent code. GPT writes decent code. The pro
 
 I would not use a tool that proxies my source code through someone else's machine. So I could not build one.
 
-## The thing nobody talks about
+**What is ShipNap?** ShipNap is an AI coding agent that connects to your GitHub repo, writes code while you sleep, and opens a pull request — without ever proxying your source code through a third-party server. You bring your own API key, pick any model (Claude, GPT, Gemini), and ShipNap handles only orchestration. Your code moves directly from GitHub to the model provider and back to a PR branch. Nothing sits in the middle.
+
+## The Security Problem With AI Coding Tools
 
 Every AI coding tool does the same thing under the hood. It reads your code, sends it to a model, gets suggestions back. The differences are UI. Tabs vs chat. Inline vs sidebar. But the architecture is identical: a service sits between your repo and the model.
 
@@ -55,12 +57,45 @@ You also control the model. Different tasks want different models. Claude Opus f
 
 And yes, the cost difference is real. A $30 subscription that caps you at 50 requests a day versus $20 in API credits that gets you hundreds of calls on the latest model. The math is not subtle.
 
-## What this is not
+## ShipNap vs. Claude Code, Copilot, and Cursor
 
-ShipNap is not a replacement for Claude Code or Copilot or Cursor. Those are interactive. You use them while coding. ShipNap runs while you sleep, or sit in meetings, or go outside. It does the task, opens the PR, waits for review.
+ShipNap is not a replacement for Claude Code or Copilot or Cursor. They serve different moments in your workflow.
+
+|  | ShipNap | Claude Code | Copilot | Cursor |
+|--|---------|------------|---------|--------|
+| **Interaction** | Async — runs while you sleep | Interactive terminal | IDE inline | IDE inline |
+| **Source code** | Never proxied through our servers | Proxied via Anthropic | Proxied via GitHub | Proxied via Microsoft |
+| **Model choice** | BYOK — any model | Claude models only | GPT and Claude | Multiple providers |
+| **Pricing** | Your API key at cost | $20/mo + API usage | $10/mo (individual) | $20/mo (Pro) |
+| **Runs unattended** | Yes | No | No | No |
+| **Best for** | Features, refactors, bug fixes during off-hours | Interactive debugging and exploration | Inline autocomplete and chat | AI-assisted coding with full IDE |
 
 You should review the PR. You should have tests. If the idea of an AI opening PRs on your repo bothers you, that is fair. This tool is probably not for you.
 
 If it makes you curious, and you have an API key, and you understand that every model gets things wrong sometimes, give it a shot.
+
+## FAQ
+
+### Is ShipNap safe to use with production code?
+
+ShipNap never stores, caches, or logs your source code. The orchestration layer clones your repo and creates a branch, but all inference calls go directly from your API key to the model provider — Anthropic, OpenAI, or Google. Those providers do not train on API traffic. For teams with compliance requirements, this architecture means your code never sits on a third-party server between your repo and the model.
+
+### Which AI models does ShipNap support?
+
+Any model available via API. Claude Opus and Sonnet from Anthropic. GPT-4o and GPT-5 from OpenAI. Gemini from Google. You bring the key, you pick the model, you switch any time. Different tasks call for different models and ShipNap does not lock you into one.
+
+### How does bring-your-own-key (BYOK) work?
+
+You provide your API key during setup. When ShipNap runs a task, the inference calls go from your key directly to the model provider. ShipNap never proxies those calls. You pay the provider at their standard rate — no markup. You can rotate or revoke your key at any time.
+
+### Does ShipNap replace Copilot or Cursor?
+
+No. Copilot and Cursor are interactive tools you use while coding — inline autocomplete, chat, code generation in your editor. ShipNap runs asynchronously. You describe a task, deploy it, and come back to a PR. They complement each other. Many teams use both.
+
+### How much does ShipNap cost?
+
+ShipNap charges a flat subscription for orchestration (pricing TBD during onboarding). Inference costs are separate — your API key, your provider bill. A typical Claude API call for a scoped task costs a few cents. Compare that to $20-30/month subscriptions that cap you at 50-100 requests a day and the cost difference adds up fast.
+
+
 
 We are onboarding in small batches. Join the waitlist at shipnap.dev.

@@ -104,6 +104,24 @@ export default async function BlogPostPage({
 
   return (
     <div>
+      {meta && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              headline: meta.title,
+              description: meta.description,
+              datePublished: meta.date,
+              dateModified: meta.date,
+              keywords: meta.tags.join(", "),
+              url: `https://shipnap.dev/blog/${slug}`,
+              isAccessibleForFree: true,
+            }),
+          }}
+        />
+      )}
       <a
         href="/blog"
         className="inline-block text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"

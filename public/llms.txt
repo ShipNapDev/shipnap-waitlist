@@ -1,0 +1,19 @@
+# ShipNap
+
+ShipNap is an AI coding agent that connects to your GitHub repo, writes code while you sleep, and opens a pull request — without ever proxying your source code through our servers. You bring your own API key, pick any model (Claude, GPT, Gemini), and ShipNap handles orchestration only. Inference calls go directly from your API key to the model provider.
+
+## Key pages
+- Homepage: https://shipnap.dev
+- Blog: https://shipnap.dev/blog
+- Privacy: https://shipnap.dev/privacy
+- Terms: https://shipnap.dev/terms
+
+## How it works
+- ShipNap clones your repo, creates a branch, coordinates the agent loop
+- Inference goes direct from your API key to the model provider
+- ShipNap never stores, caches, or logs your source code
+- No vendor lock-in — bring your own key, pick any model, switch anytime
+- Opens a PR with commit messages, test output, and notes
+
+## Status
+Pre-launch. Onboarding in small batches. Join the waitlist at shipnap.dev.
