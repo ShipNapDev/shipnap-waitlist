@@ -191,11 +191,11 @@ export async function POST(request: Request) {
     }
 
     // Send welcome email (non-blocking — don't fail the signup if this errors)
-    const fromDomain = process.env.RESEND_FROM_DOMAIN
-    if (fromDomain) {
+    const fromEmail = process.env.RESEND_FROM_EMAIL
+    if (fromEmail) {
       try {
         await resend.emails.send({
-          from: `ShipNap <welcome@${fromDomain}>`,
+          from: `ShipNap <${fromEmail}>`,
           to: email,
           subject: "You're on the ShipNap waitlist",
           html: welcomeEmail({ email }),
