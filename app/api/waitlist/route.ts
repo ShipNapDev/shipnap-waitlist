@@ -55,6 +55,66 @@ function validateOrigin(request: Request): boolean {
   return true
 }
 
+function welcomeEmail({ email }: { email: string }) {
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background-color:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0a0a0a;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
+          <tr>
+            <td align="left" style="padding-bottom:32px;">
+              <span style="color:#ffffff;font-size:20px;font-weight:700;">ShipNap</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:#141414;border:1px solid #262626;border-radius:12px;padding:40px 32px;">
+              <h1 style="margin:0 0 16px;color:#ffffff;font-size:24px;font-weight:700;line-height:1.3;">
+                You're on the list.
+              </h1>
+              <p style="margin:0 0 24px;color:#a3a3a3;font-size:16px;line-height:1.6;">
+                Thanks for joining the ShipNap waitlist. We're onboarding developers in small batches — you'll hear from us when your spot opens up.
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#1a1a1a;border:1px solid #262626;border-radius:8px;padding:24px;">
+                <tr>
+                  <td>
+                    <p style="margin:0 0 12px;color:#737373;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">What to expect</p>
+                    <p style="margin:0 0 8px;color:#d4d4d4;font-size:14px;line-height:1.6;">▪ Early access as we expand in batches</p>
+                    <p style="margin:0 0 8px;color:#d4d4d4;font-size:14px;line-height:1.6;">▪ BYOK — bring your own API key, no markup</p>
+                    <p style="margin:0;color:#d4d4d4;font-size:14px;line-height:1.6;">▪ Pick any model: Claude, GPT, Gemini</p>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:24px 0 0;color:#737373;font-size:13px;line-height:1.5;">
+                In the meantime, read about <a href="https://shipnap.dev/blog/shipnap-intro" style="color:#a3a3a3;text-decoration:underline;">why we built ShipNap</a> and how the architecture keeps your source code off our servers.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-top:24px;">
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="color:#525252;font-size:12px;">
+                    <p style="margin:0 0 4px;">Sent to ${email}. <a href="%mailing_list_unsubscribe_url%" style="color:#525252;">Unsubscribe</a> anytime.</p>
+                    <p style="margin:0;">ShipNap — AI agents that code while you sleep.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`
+}
+
 export async function POST(request: Request) {
   if (!validateOrigin(request)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
@@ -127,6 +187,21 @@ export async function POST(request: Request) {
           { error: "Failed to join waitlist" },
           { status: 500 }
         )
+      }
+    }
+
+    // Send welcome email (non-blocking — don't fail the signup if this errors)
+    const fromDomain = process.env.RESEND_FROM_DOMAIN
+    if (fromDomain) {
+      try {
+        await resend.emails.send({
+          from: `ShipNap <welcome@${fromDomain}>`,
+          to: email,
+          subject: "You're on the ShipNap waitlist",
+          html: welcomeEmail({ email }),
+        })
+      } catch (emailError) {
+        console.error("Welcome email error:", emailError)
       }
     }
 
