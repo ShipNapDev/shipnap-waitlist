@@ -3,6 +3,7 @@ import path from "node:path"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { evaluate } from "@mdx-js/mdx"
+import remarkGfm from "remark-gfm"
 import * as runtime from "react/jsx-runtime"
 import { useMDXComponents } from "@/mdx-components"
 import { BackToTop } from "@/components/back-to-top"
@@ -96,6 +97,7 @@ export default async function BlogPostPage({
     const raw = fs.readFileSync(filePath, "utf-8")
     const mod = await evaluate(raw, {
       ...runtime,
+      remarkPlugins: [remarkGfm],
       useMDXComponents,
     })
     Post = mod.default
