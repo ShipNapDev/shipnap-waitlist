@@ -1,0 +1,126 @@
+export const metadata = {
+  title: "Your AI Agent Is Only as Good as Your Task Description",
+  description:
+    "The difference between a PR you merge and one you delete is the prompt. Here's how to write task descriptions that AI coding agents actually get right.",
+  date: "2026-06-06",
+  tags: ["AI", "Developer Tools", "Prompt Engineering"],
+}
+
+I have spent the last few months watching an AI agent write code against real repos. Some PRs got merged. Some got deleted before the coffee finished brewing. The difference was rarely the model. It was the task description.
+
+Most people write AI coding prompts the way they write Jira tickets. A title. Maybe a sentence. Then they're surprised when the agent builds the wrong thing, misses context, or delivers something that technically works but feels wrong.
+
+The model is not the bottleneck. Your description is.
+
+## Why async agents need better prompts than interactive tools
+
+Interactive AI tools like Copilot, Cursor, and Claude Code let you course-correct in real time. You see the suggestion, you refine, you iterate. The feedback loop is seconds.
+
+An async agent runs while you are asleep. When you open the PR at 9 AM, the agent is done. There is no back-and-forth. Every missing detail in your task description compounds into something you have to fix yourself, or worse, something you merge without noticing.
+
+This is not a theoretical problem. It is the difference between waking up to a feature you can review in ten minutes and waking up to a PR you have to rewrite.
+
+## The anatomy of a task an agent can actually complete
+
+A good async task description has four things. Most people include one or two.
+
+### 1. The outcome, not the implementation
+
+Tell the agent what should be true when it is done. Do not tell it how to get there unless the how matters for correctness or constraints.
+
+**Bad:** "Add a try-catch to the login endpoint."
+
+**Good:** "The login endpoint should return a 429 with a Retry-After header when a client exceeds 5 requests per minute. It should never return a 500 from an unhandled rate limit error."
+
+The bad prompt assumes the implementation. Maybe a try-catch is the right fix. Maybe the rate limiter should be middleware. Maybe the error should bubble to a handler you already have. Let the agent figure that out. The good prompt describes the behavior you want and the failure mode you are fixing.
+
+### 2. The scope boundary
+
+AI agents are pathologically helpful. If you say "improve error handling in the API," they will refactor every endpoint, add middleware you did not ask for, and rewrite your logging setup. Then you spend your morning undoing most of it.
+
+Define what is in scope and, just as importantly, what is out.
+
+**Bad:** "Improve error handling."
+
+**Good:** "Add structured error responses to the `/api/billing` routes only. Do not touch middleware, logging, or any endpoint outside `/api/billing`. Keep existing response shapes for endpoints that already return errors correctly."
+
+### 3. The relevant context
+
+The agent does not know what you know. It cannot read Slack threads or remember the conversation you had yesterday about why the user table uses a composite key. If the task depends on context the agent cannot discover from the codebase alone, include it.
+
+Context worth including:
+- Why the current code works the way it does (especially if it looks wrong)
+- Related PRs or issues the agent should read before starting
+- Conventions your team follows that differ from defaults (tab width, import ordering, test file placement)
+- Decisions you have already made (e.g. "use the existing rate limit utility in `lib/rate-limit.ts`, do not pull in a new library")
+
+**Bad:** "Add rate limiting."
+
+**Good:** "Add rate limiting to the login endpoint. Use the existing `createRateLimiter` from `lib/rate-limit.ts`. It wraps the Upstash client we already have. The limit should be 5 requests per minute per IP. We use this same pattern in `apps/api/routes/contact.ts` if you want a reference."
+
+### 4. The acceptance criteria
+
+How will you know the task is done? Give the agent testable conditions. This also makes your review faster because you can check each condition mechanically.
+
+**Bad:** "Make sure it works."
+
+**Good:** "The PR should include tests that verify: (1) a client making 5 requests in under a minute gets a 200 each time, (2) the 6th request within the window gets a 429, (3) the 7th request after the window resets gets a 200, (4) the rate limit state is stored in Redis, not in memory."
+
+## Real examples, from bad to mergeable
+
+Here are three versions of the same task, written for the same Next.js codebase.
+
+### Version 1: The Jira ticket
+
+> Add input validation to the waitlist form.
+
+What happens: The agent adds `required` attributes to the HTML. Maybe a `type="email"` on the input. Technically correct, completely useless. Browsers already do this. The real requirement was server-side validation because the form posts to an API route that accepts anything.
+
+### Version 2: Better, but still ambiguous
+
+> Add server-side validation to the waitlist API route. Validate the email field.
+
+What happens: The agent adds an email format check. Good. But the endpoint also needs CSRF protection, and the agent does not know the form uses a custom header for that, so it breaks the existing flow. You get a valid PR that introduces a regression.
+
+### Version 3: Mergeable
+
+> Add server-side validation to `POST /api/waitlist`.
+>
+> **What should happen:**
+> - Reject requests where `email` is missing, not a string, or not a valid email format (use zod; we already have it in the project).
+> - Return 400 with `{ error: "Invalid email format" }` for bad emails.
+> - Return 400 with `{ error: "Email is required" }` for missing emails.
+>
+> **What should not change:**
+> - Do not modify the rate limiting logic (already handled in the route).
+> - Do not change the response shape for successful submissions.
+> - Do not add any new dependencies.
+>
+> **Tests:**
+> - A POST with `{ email: "not-an-email" }` returns 400.
+> - A POST with `{}` returns 400.
+> - A POST with `{ email: "hello@example.com" }` returns 200 (assuming rate limit not hit).
+>
+> **Context:** The waitlist form currently posts to this route with `{ email }`. We use Zod for validation elsewhere in the project. Check `apps/api/routes/contact.ts` for the pattern.
+
+This version tells the agent what done looks like, what not to touch, what conventions to follow, and where to find a reference. An agent with this prompt can produce a PR you review in five minutes.
+
+## The hidden benefit: better thinking
+
+Here is the thing I did not expect. Writing task descriptions this detailed forces you to understand what you are actually asking for.
+
+Half the time, I start writing a task and realize I do not know the answer to my own scope question. Which endpoint handles this? Do we have a pattern for this already? Should this be a new route or a modification? By the time I finish the description, I have done the thinking work. The agent is just executing.
+
+This is the real promise of AI coding agents. Not that they replace thinking. That they force you to think clearly before you build anything at all.
+
+## What this means for your workflow
+
+If you are using interactive AI tools today, you can get away with vague prompts because you steer in real time. If you want to use an async agent (ShipNap or anything else), you need a different muscle. The skill is not prompt engineering. It is task decomposition. Breaking a feature into scoped, well-described units that an agent can complete independently.
+
+Start small. Take your next bug fix, write a task description using the four-part structure above, and give it to whatever AI tool you use. See what comes back. If the result is wrong, the description was probably missing something. Fix the description, not the code. After a few rounds, you will know what your agent needs from you.
+
+And then you can queue three of them before bed and wake up to three PRs.
+
+---
+
+*ShipNap is an async AI coding agent that connects to your GitHub repo, runs tasks while you sleep, and opens pull requests. BYOK. No proxy. No markup. [Join the waitlist.](https://shipnap.dev)*
