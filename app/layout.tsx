@@ -15,9 +15,9 @@ const fontMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://shipnap.dev"),
-  title: "ShipNap - AI Agents That Code While You Sleep",
+  title: "ShipNap - Ship While You Sleep",
   description:
-    "Connect any GitHub repo, bring your own API key, pick your model, click Deploy, and wake up to a pull request.",
+    "The overnight coding agent for indie hackers. Capture a late-night idea, connect your GitHub repo, and wake up to a pull request.",
   alternates: { canonical: "/" },
   icons: {
     icon: [
