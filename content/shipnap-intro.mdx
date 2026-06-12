@@ -1,101 +1,132 @@
 export const metadata = {
-  title: "I Built an AI Coding Agent. I Don't Trust AI Coding Agents.",
+  title: "Why I Built ShipNap for Late-Night Builders",
   description:
-    "ShipNap connects to your repo, writes code while you sleep, and opens a PR. Here's why I built it to never touch your source code.",
+    "ShipNap is the overnight coding agent for indie hackers: capture an idea before bed, let it work while you sleep, and wake up to a pull request.",
   date: "2026-06-04",
-  tags: ["AI", "Developer Tools"],
+  tags: ["Indie Hacking", "Developer Tools", "AI"],
 }
 
-I spent six months building an AI coding agent. Three months in, I almost killed it.
+I kept having the same problem.
 
-The models were fine. Claude writes decent code. GPT writes decent code. The problem was the architecture. Every design I drew had a server sitting between your repo and the model. That server had to clone your code, read it, generate diffs from it. And the moment it existed, it became a target. A liability. Something you had to audit and pray nobody breached.
+It was late. I was tired. The laptop was basically already closed. Then a feature idea would hit: a better onboarding step, a bug fix I finally understood, a tiny cleanup that had been annoying me for weeks.
 
-I would not use a tool that proxies my source code through someone else's machine. So I could not build one.
+The idea was clear enough to describe, but I did not have the energy to build it.
 
-**What is ShipNap?** ShipNap is an AI coding agent that connects to your GitHub repo, writes code while you sleep, and opens a pull request — without ever proxying your source code through a third-party server. You bring your own API key, pick any model (Claude, GPT, Gemini), and ShipNap handles only orchestration. Your code moves directly from GitHub to the model provider and back to a PR branch. Nothing sits in the middle.
+By the next morning, the spark was usually gone.
 
-## The Security Problem With AI Coding Tools
+That is the moment ShipNap is built for.
 
-Every AI coding tool does the same thing under the hood. It reads your code, sends it to a model, gets suggestions back. The differences are UI. Tabs vs chat. Inline vs sidebar. But the architecture is identical: a service sits between your repo and the model.
+**What is ShipNap?** ShipNap is an overnight coding agent for indie hackers and vibe coders. You connect a GitHub repo, bring your own model API key, describe a focused task, and ShipNap works while you are away. When it is done, you get a pull request to review.
 
-For side projects, fine. For a real codebase with real customers and real compliance requirements? Hard no for most teams I talk to. Legal kills it before the first commit.
+Not another chat box. Not another IDE sidebar. A place to drop the task when inspiration hits and let tomorrow-you review the progress.
 
-Here is the part that gets weird. The AI companies already solved the trust side. Anthropic does not train on API traffic. OpenAI does not train on API traffic. Google does not train on API traffic. The model providers are not the risk. The proxy is.
+## The real problem is momentum
 
-So I asked: what if there was no proxy?
+Most developer tools talk about productivity. I care more about momentum.
 
-## How it works
+If you are building a side project or tiny SaaS, momentum is fragile. You do not have a sprint board, a product manager, or a team of engineers picking up tickets. You have bursts of energy between work, life, and sleep.
 
-ShipNap handles orchestration only. It clones your repo, creates a branch, coordinates the agent loop. But the inference calls go directly from your API key to the model provider. Your code moves from GitHub to Claude, or GPT, or Gemini, and back to a PR branch. ShipNap never touches it.
+When an idea shows up at 11:47 PM, you have three options:
 
-What that means in practice:
+- ignore it and hope you remember tomorrow
+- write it in a notes app and let it rot
+- stay up too late and ship tired code
 
-- No source code stored, cached, or logged on our servers
-- No vendor lock-in. Bring your own key, pick any model, switch any time
-- No markup. Your provider bills you at their standard rate
-- No black-box prompts. You can inspect and tune the system prompt yourself
+ShipNap is the fourth option: write the task clearly, start the agent, and go to bed.
 
-You need an API key. For the people this is built for, that is not a downside. It is table stakes.
+## Why ShipNap is an overnight agent, not just an AI agent
 
-## Does it work?
+AI coding tools are usually built for the moment you are actively coding. Cursor, Copilot, Claude Code, and similar tools are great when you want to steer line by line.
 
-Sometimes. Sometimes it does not. Same as every AI tool.
+ShipNap is for a different moment.
 
-It does well on scoped tasks. "Add rate limiting to the login endpoint." "Migrate the user table for avatar_url." "Write tests for the billing module." You get a PR with commit messages, test output, and notes on anything non-obvious it decided.
+It is for tasks you can describe well enough to hand off:
 
-On large ambiguous tasks it struggles. Same as a human junior dev who got a vague ticket at 4:45 PM on a Friday. The models are not magic. They are tools. Good ones, improving fast, but tools.
+- fix the mobile navbar overflow
+- add server-side validation to the waitlist form
+- write tests for the billing webhook
+- refactor this component into smaller pieces
+- add empty states to the dashboard
 
-I am saying this because the AI coding space is drowning in hype. Everything is revolutionary, game-changing, the future of software. Most of it ships features the models wrote three months ago and nobody reviewed. I am not bitter. I am just someone who has used these tools enough to know when they help and when they burn my time.
+Those are not "build my whole startup" tasks. They are scoped pieces of work that should become pull requests.
 
-## Why BYOK matters
+That distinction matters. ShipNap does not try to replace your judgment. It tries to turn a clear task into reviewable progress while you are offline.
 
-Bring Your Own Key is not a pricing decision. It is an architectural one.
+## The setup should be fast enough for a sleepy founder
 
-When you hold the key, the threat model collapses to something manageable. The orchestration layer cannot read your code because it does not proxy the calls. Only three parties ever see your source: your repo, your machine, and the model provider. Who, again, is not training on it.
+If the product is for late-night inspiration, setup cannot feel like enterprise onboarding.
 
-You also control the model. Different tasks want different models. Claude Opus for architecture refactors. GPT for straightforward CRUD. Gemini when you need a 2M token context window. With BYOK you switch per task. Nobody else decides for you.
+The flow is intentionally simple:
 
-And yes, the cost difference is real. A $30 subscription that caps you at 50 requests a day versus $20 in API credits that gets you hundreds of calls on the latest model. The math is not subtle.
+1. Sign in with GitHub.
+2. Choose a repo.
+3. Add your model API key.
+4. Describe the task.
+5. Start the run.
+6. Review the PR later.
 
-## ShipNap vs. Claude Code, Copilot, and Cursor
+The goal is not to build a complicated agent platform. The goal is to make the first task feel close enough that you actually do it before going to sleep.
 
-ShipNap is not a replacement for Claude Code or Copilot or Cursor. They serve different moments in your workflow.
+## Why bring-your-own-key matters
 
-|  | ShipNap | Claude Code | Copilot | Cursor |
-|--|---------|------------|---------|--------|
-| **Interaction** | Async — runs while you sleep | Interactive terminal | IDE inline | IDE inline |
-| **Source code** | Never proxied through our servers | Proxied via Anthropic | Proxied via GitHub | Proxied via Microsoft |
-| **Model choice** | BYOK — any model | Claude models only | GPT and Claude | Multiple providers |
-| **Pricing** | Your API key at cost | $20/mo + API usage | $10/mo (individual) | $20/mo (Pro) |
-| **Runs unattended** | Yes | No | No | No |
-| **Best for** | Features, refactors, bug fixes during off-hours | Interactive debugging and exploration | Inline autocomplete and chat | AI-assisted coding with full IDE |
+Bring Your Own Key is not just a pricing trick. It keeps ShipNap simple and honest.
 
-You should review the PR. You should have tests. If the idea of an AI opening PRs on your repo bothers you, that is fair. This tool is probably not for you.
+You use your Anthropic, OpenAI, or Google key. Your provider bills you directly. ShipNap does not add a markup to model usage, and you are not locked into whichever model I chose this month.
 
-If it makes you curious, and you have an API key, and you understand that every model gets things wrong sometimes, give it a shot.
+That also fits how builders actually work. Sometimes Claude is better for a refactor. Sometimes GPT is fine for a small CRUD change. Sometimes you want Gemini for a huge context window. With BYOK, you pick per task.
 
-## FAQ
+## What about source code?
 
-### Is ShipNap safe to use with production code?
+Trust is the hard part of AI coding tools.
 
-ShipNap never stores, caches, or logs your source code. The orchestration layer clones your repo and creates a branch, but all inference calls go directly from your API key to the model provider — Anthropic, OpenAI, or Google. Those providers do not train on API traffic. For teams with compliance requirements, this architecture means your code never sits on a third-party server between your repo and the model.
+ShipNap is built around orchestration, not storing your repo. It creates branches, coordinates the run, and opens pull requests. Your code is not something ShipNap stores, caches, logs, or trains on.
 
-### Which AI models does ShipNap support?
+You should still review every pull request. You should still have tests. You should still treat generated code like code from a very fast junior developer who occasionally makes strange choices.
 
-Any model available via API. Claude Opus and Sonnet from Anthropic. GPT-4o and GPT-5 from OpenAI. Gemini from Google. You bring the key, you pick the model, you switch any time. Different tasks call for different models and ShipNap does not lock you into one.
+That honesty is important. The point is not magic. The point is useful progress.
 
-### How does bring-your-own-key (BYOK) work?
+## What ShipNap is good at
 
-You provide your API key during setup. When ShipNap runs a task, the inference calls go from your key directly to the model provider. ShipNap never proxies those calls. You pay the provider at their standard rate — no markup. You can rotate or revoke your key at any time.
+ShipNap works best when the task is focused and reviewable.
 
-### Does ShipNap replace Copilot or Cursor?
+Good overnight tasks look like this:
 
-No. Copilot and Cursor are interactive tools you use while coding — inline autocomplete, chat, code generation in your editor. ShipNap runs asynchronously. You describe a task, deploy it, and come back to a PR. They complement each other. Many teams use both.
+- "Add rate limiting to the login endpoint using the existing Redis helper. Include tests."
+- "Add an empty state to the projects dashboard when the user has no projects."
+- "Update the waitlist page copy to focus on shipping while you sleep."
+- "Extract the pricing card into a reusable component without changing the UI."
 
-### How much does ShipNap cost?
+Bad overnight tasks look like this:
 
-ShipNap charges a flat subscription for orchestration (pricing TBD during onboarding). Inference costs are separate — your API key, your provider bill. A typical Claude API call for a scoped task costs a few cents. Compare that to $20-30/month subscriptions that cap you at 50-100 requests a day and the cost difference adds up fast.
+- "Build Stripe billing, analytics, referrals, and onboarding."
+- "Make the app better."
+- "Refactor the whole codebase."
+- "Create my startup."
 
+The more specific the task, the better the PR.
 
+## The morning PR is the product
+
+The magic moment is not watching an agent think.
+
+The magic moment is opening GitHub in the morning and seeing that the idea moved forward while you were asleep.
+
+Maybe the PR is perfect. Maybe it needs edits. Maybe you close it. But even then, you have context, a branch, a diff, and a clearer idea of what the task needs.
+
+That is progress.
+
+For indie hackers, progress compounds. A few extra PRs per week can be the difference between a project that sits in a folder and a product that actually ships.
+
+## Ship while you sleep
+
+ShipNap exists for the builder who gets ideas at inconvenient times.
+
+The person who wants to keep moving, but also needs to sleep.
+
+The person who does not want another dashboard, another AI chat tab, or another tool that promises to replace them.
+
+Just a simple loop:
+
+Describe the task. Go to bed. Wake up to a pull request.
 
 We are onboarding in small batches. Join the waitlist at shipnap.dev.
