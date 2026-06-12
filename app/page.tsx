@@ -18,12 +18,15 @@ export default function Home() {
 
         <div className="relative mx-auto max-w-6xl px-6">
           <div className="flex flex-col items-center text-center">
+            <p className="mb-4 rounded-full border border-border bg-card/60 px-4 py-1.5 text-sm text-muted-foreground">
+              The overnight coding agent for indie hackers
+            </p>
             <h1 className="mb-6 max-w-4xl text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl md:text-6xl lg:text-7xl">
-              Describe a task. Wake up to a pull request.
+              Ship while you sleep.
             </h1>
 
             <p className="mb-8 max-w-2xl text-lg text-muted-foreground text-balance md:text-xl">
-              ShipNap runs an AI agent against your repo — using your own API key, on your choice of model. No markup. No lock-in. Nothing stored.
+              Got a feature idea before bed? Describe it, connect your repo, and wake up to a pull request. ShipNap keeps the momentum going when you are too tired to code.
             </p>
 
             <div className="w-full max-w-md">
@@ -37,7 +40,7 @@ export default function Home() {
       <section className="relative pt-10 pb-6 md:pt-14 md:pb-10">
         <div className="mx-auto max-w-4xl px-6">
           <p className="mb-4 text-center text-xs font-medium uppercase tracking-widest text-muted-foreground/60">
-            See it in action
+            From midnight idea to morning PR
           </p>
           <DeployPreview />
         </div>
@@ -48,10 +51,10 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center">
             <h2 className="mb-3 text-3xl font-bold text-foreground md:text-4xl">
-              How it works
+              Before bed to first PR in four steps
             </h2>
             <p className="text-muted-foreground">
-              Four steps from description to pull request
+              Capture the spark, let ShipNap do the async work, review in the morning.
             </p>
           </div>
 
@@ -61,22 +64,22 @@ export default function Home() {
             <StepCard
               number="1"
               title="Connect"
-              description="Authorize access to any GitHub repo. Public or private."
+              description="Sign in with GitHub and choose the repo you want ShipNap to work on."
             />
             <StepCard
               number="2"
               title="Describe"
-              description="Write the task in plain English, like you'd explain it to a coworker."
+              description="Write the task while the idea is fresh, like you are leaving a note for tomorrow."
             />
             <StepCard
               number="3"
-              title="Ship"
-              description="The agent writes the code, runs tests, and opens a pull request."
+              title="Nap"
+              description="ShipNap branches, codes, runs checks, and keeps going while you log off."
             />
             <StepCard
               number="4"
               title="Review"
-              description="Review clean commits, check test output, merge when ready."
+              description="Wake up to commits, test output, decision notes, and a pull request ready for review."
             />
           </div>
         </div>
@@ -87,68 +90,20 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center">
             <h2 className="mb-3 text-3xl font-bold text-foreground md:text-4xl">
-              Your code. Your model. Your key.
+              Built for sudden inspiration
             </h2>
             <p className="text-muted-foreground">
-              ShipNap handles the orchestration — cloning, branching, committing, opening the PR. You control everything else.
+              Fast enough for a late-night idea. Serious enough to open a real pull request.
             </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
-            <FeatureCard
-              icon={
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                </svg>
-              }
-              title="Any GitHub Repo"
-              description="Connect public or private repos. You control which repositories ShipNap can access at all times."
-            />
-            <FeatureCard
-              icon={
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
-                </svg>
-              }
-              title="Bring Your Own Key"
-              description="Paste your Anthropic, OpenAI, or Google key. Your provider bills you at their standard rate — we add nothing."
-            />
-            <FeatureCard
-              icon={
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
-                </svg>
-              }
-              title="Any Model"
-              description="Claude, GPT, Gemini — whichever model handles your codebase best. Change models between tasks without changing tools."
-            />
-            <FeatureCard
-              icon={
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                </svg>
-              }
-              title="Secure by Design"
-              description="Source code flows from your repo through the model to a PR branch. ShipNap doesn't store, cache, log, or train on your code."
-            />
-            <FeatureCard
-              icon={
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              }
-              title="Sleep & Ship"
-              description="Queue a task at the end of your day. Wake up to a PR with commits, tests, and a change summary."
-            />
-            <FeatureCard
-              icon={
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-                </svg>
-              }
-              title="Clean Pull Requests"
-              description="Every PR lands with atomic commits, a clear description, test results, and decision notes for nontrivial changes."
-            />
+            <FeatureCard title="Any GitHub repo" description="Connect public or private repos and turn a small idea, bug fix, or refactor into a reviewable branch." icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>} />
+            <FeatureCard title="Bring your own key" description="Use your Anthropic, OpenAI, or Google key directly. No AI markup, no bundled mystery costs, no provider lock-in." icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" /></svg>} />
+            <FeatureCard title="Pick the model for the job" description="Claude, GPT, Gemini — choose what works best for the task and switch whenever you want." icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>} />
+            <FeatureCard title="No code stored" description="ShipNap is built around orchestration, not hoarding your repo. Your code is not stored, cached, logged, or used for training." icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>} />
+            <FeatureCard title="Perfect for off-hours tasks" description="Queue focused work when inspiration hits: a bug fix, a small feature, tests, cleanup, or a refactor you keep postponing." icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>} />
+            <FeatureCard title="Pull requests, not magic" description="You still review the work. ShipNap gives you commits, test output, and notes so you can decide what to merge." icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>} />
           </div>
         </div>
       </section>
@@ -163,10 +118,10 @@ export default function Home() {
 
             <div className="relative flex flex-col items-center text-center">
               <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl text-balance">
-                Try it on your own repo.
+                Your next late-night idea deserves a morning PR.
               </h2>
               <p className="mb-6 max-w-lg text-muted-foreground">
-                We're onboarding developers in small batches. Join the waitlist to get early access.
+                We are onboarding indie hackers and vibe coders in small batches. Join the waitlist and be ready when the next idea hits.
               </p>
               <div className="mb-4 w-full max-w-md">
                 <WaitlistForm />

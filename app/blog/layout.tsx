@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import { SiteLayout } from "@/components/site-layout"
 
 export const metadata: Metadata = {
-  title: "ShipNap Blog — Thoughts on AI, Code, and Shipping",
+  title: "ShipNap Blog — Ship While You Sleep",
   description:
-    "Deep dives on AI-powered development, prompt engineering, and building tools that write code.",
+    "Notes for indie hackers on overnight coding agents, scoped tasks, late-night ideas, and waking up to pull requests.",
   alternates: { canonical: "/blog" },
 }
 
