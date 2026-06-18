@@ -1,0 +1,266 @@
+export const metadata = {
+  title: "How to Review an AI-Generated Pull Request Without Losing Your Morning",
+  description:
+    "A risk-first checklist for reviewing AI-written code, catching expensive mistakes, and deciding whether a pull request is safe to merge.",
+  date: "2026-06-18",
+  tags: ["Code Review", "AI", "GitHub", "Security"],
+}
+
+The pull request is waiting when you wake up.
+
+It has a tidy description. The checks are green. The diff looks reasonable at a glance.
+
+This is the dangerous part.
+
+AI-written code often looks more finished than it is. Variable names are neat. Comments sound confident. The happy path probably works. That polish can make a reviewer move faster than the evidence deserves.
+
+You do not need to distrust every line, and you do not need to spend the whole morning reenacting the task by hand. You need a review order that finds costly mistakes early.
+
+This is the one I use.
+
+## Start with the promise, not the code
+
+Before opening the Files changed tab, read the original task and write down what the pull request is supposed to make true.
+
+For example:
+
+> A sixth failed login attempt within one minute returns 429. Successful logins still work. The response does not reveal whether an email exists.
+
+That is the contract. The diff is only one proposed way to satisfy it.
+
+This distinction sounds fussy until an agent gives you a beautiful implementation of the wrong thing. It added a rate limiter, yes, but keyed it by email address instead of IP. Or it handled failed passwords but forgot nonexistent accounts. Or it changed the response shape and broke the client.
+
+[GitHub's review guidance](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request) makes the same basic point: understand the purpose of the pull request before reviewing individual files.
+
+Ask three questions:
+
+1. What behavior should change?
+2. What behavior must stay the same?
+3. How will I prove both?
+
+If the pull request description cannot answer those questions, the review has already found its first problem.
+
+## Read the file list like a receipt
+
+Do not begin at line one and obediently scroll downward. Scan the changed file list first.
+
+You are looking for surprise.
+
+If the task was "add an empty state to the dashboard," why did the agent touch authentication middleware? Why is there a database migration? Why did `package-lock.json` gain 900 lines? Why was an unrelated test deleted?
+
+Most bad AI pull requests reveal themselves through scope before they reveal themselves through syntax.
+
+Use this quick classification:
+
+| Change | First question |
+| --- | --- |
+| Application code | Does this file belong to the requested behavior? |
+| Tests | Do they test the contract or merely the implementation? |
+| Dependencies | Was a new package necessary? |
+| Configuration | Did permissions, build behavior, or deployment behavior change? |
+| Database | Is the migration reversible and safe for existing data? |
+| Generated files | Can I explain why they changed? |
+
+An unexpected file is not automatically wrong. It does earn an explanation.
+
+## Review in risk order
+
+GitHub recommends reviewing a pull request one file at a time and marking files as viewed. That is useful for tracking progress, but the order of those files matters.
+
+I review the highest-risk surfaces first:
+
+1. Authentication and authorization
+2. Database migrations and destructive operations
+3. Payments, billing, and account state
+4. Secrets, environment variables, and permissions
+5. New dependencies and lockfiles
+6. Public API contracts
+7. Business logic
+8. UI and copy
+9. Tests
+
+The order changes with the product, of course. A CSS-only site does not need a payment review. A healthcare app has a rather different definition of "high risk."
+
+The useful rule is simple: inspect the files with the largest blast radius before spending time on naming, formatting, or tiny abstractions.
+
+### Authentication and authorization
+
+Look for checks that exist in one code path but not another.
+
+Common misses include:
+
+- verifying that a user is signed in but not that they own the resource
+- protecting the page while leaving the API route open
+- trusting a role or user ID sent by the client
+- applying authorization after a database write
+- returning different errors that reveal whether an account exists
+
+Do not ask only, "Can the intended user do this?" Ask, "Can the wrong user do this?"
+
+### Data writes and migrations
+
+Read every write path slowly.
+
+Check what happens when:
+
+- the request is repeated
+- the process fails halfway through
+- a field is missing
+- old rows do not match the new assumption
+- two requests arrive at nearly the same time
+
+An agent may generate a migration that works perfectly on an empty development database and fails on the first real row in production. Green tests will not help if the tests never create old data.
+
+### Dependencies
+
+New packages deserve suspicion because they enlarge the thing you have to trust and maintain.
+
+Ask whether the codebase already has a utility that solves the problem. Then inspect the package name carefully. Look for a typo, an abandoned package, an unexpectedly broad permission, or a major version jump hidden inside a lockfile.
+
+GitHub's [dependency review](https://docs.github.com/en/code-security/concepts/supply-chain-security/dependency-review) can show dependency changes and known vulnerabilities in a pull request. It is still worth reading the source diff because not every manifest change appears cleanly in a rich dependency view.
+
+## Treat tests as claims, not proof
+
+AI agents are very good at writing tests that agree with the code they just wrote.
+
+That is not the same as testing the requirement.
+
+Imagine an agent adds a function that incorrectly allows five retries after the first request. It can also add a test that expects five retries after the first request. The suite passes. The bug now has supporting documentation.
+
+Read each new test and ask:
+
+- Does the test name describe user-visible behavior?
+- Would this test fail if the implementation had an off-by-one error?
+- Is there a negative case?
+- Is there a boundary case?
+- Does the test exercise the real integration point or a heavily mocked imitation?
+- Was an old assertion weakened or deleted to make the suite pass?
+
+Then add one test the agent did not think of.
+
+This is my favorite review trick. Pick the awkward case: an empty string, a repeated webhook, a user accessing someone else's record, a timestamp at the exact boundary, a failed network call after a successful database write.
+
+You learn more from one independent test than from reading ten tests written by the same system that wrote the feature.
+
+## Run the behavior, not just the test command
+
+A green CI badge tells you the configured checks passed. It does not tell you that the right checks exist.
+
+For user-facing changes, run the app and use the feature. For an API change, send a real request. For a migration, test it against a copy or fixture that contains old data. For a background job, run it twice.
+
+Try the expected path, then try to be mildly annoying:
+
+- submit twice
+- refresh midway through
+- use stale data
+- remove a required field
+- use a different account
+- make the dependency fail
+- navigate with a keyboard
+
+You are not performing a full penetration test before breakfast. You are checking whether the implementation survives contact with behavior the prompt did not spell out.
+
+Research gives us a reason to keep this skepticism. A [2024 study of AI-generated code](https://arxiv.org/abs/2409.19182) used unit tests, fuzzing, and static analysis across several programming tasks. The authors found subtle correctness failures and weaker defensive programming in generated code. They also found cases where asking the model to repair an issue introduced a new one elsewhere.
+
+The practical lesson is not "AI code is bad." It is that plausible code still needs independent evidence.
+
+## Check the boring security failures
+
+Security review can become abstract very quickly. Keep the first pass concrete.
+
+Search the diff for:
+
+- hardcoded tokens, passwords, private keys, and connection strings
+- logs that include request bodies, headers, email addresses, or tokens
+- string-built SQL queries
+- user-controlled URLs passed to server-side requests
+- unsanitized HTML
+- file paths built from user input
+- disabled certificate checks
+- wildcard CORS rules
+- authorization based only on client-provided fields
+- secrets copied into tests or example files
+
+Enable automated checks where you can. GitHub supports [secret scanning](https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning), and its branch protection rules can require reviews, status checks, resolved conversations, signed commits, and successful deployments before merge.
+
+Automation catches repeatable mistakes. It does not replace a person asking whether the new behavior makes sense. The [OWASP Code Review Guide](https://owasp.org/www-project-code-review-guide/) still places manual security review alongside scanners, and the [NIST Secure Software Development Framework](https://csrc.nist.gov/pubs/sp/800/218/final) recommends folding secure development practices into the normal software lifecycle instead of treating them as a final ceremony.
+
+## Make the repository harder to merge badly
+
+Good judgment helps with one pull request. Repository rules help when you are tired, distracted, or a little too impressed by a clean diff.
+
+For a small project, I would start with:
+
+- require the test, typecheck, and lint jobs to pass
+- block direct pushes to the default branch
+- require conversations to be resolved
+- dismiss stale approvals after new commits
+- prevent force pushes
+- add a `CODEOWNERS` file for sensitive areas
+
+GitHub can automatically request the people listed in [`CODEOWNERS`](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) when their files change. With branch protection, you can also require a code owner's approval before merge.
+
+If you are a solo builder, required approval may not fit your workflow. Required checks still do. So does the habit of leaving the pull request open while you step away for coffee. A ten-minute gap catches a surprising amount of nonsense.
+
+## The copy-paste morning checklist
+
+Drop this into your pull request template, task tracker, or notes app.
+
+```md
+## Contract
+
+- [ ] I can state the behavior this PR is meant to change.
+- [ ] I know what behavior must remain unchanged.
+- [ ] The diff matches the task's scope.
+
+## Risk
+
+- [ ] I reviewed auth, permissions, data writes, billing, and config first.
+- [ ] Every unexpected file has a reason to be here.
+- [ ] New dependencies are necessary and verified.
+- [ ] No secret, personal data, or sensitive token is exposed or logged.
+
+## Evidence
+
+- [ ] Required CI checks pass.
+- [ ] Tests assert the requirement, not just the implementation.
+- [ ] I added or tried one case the author did not cover.
+- [ ] I ran the changed behavior myself.
+- [ ] I tested a failure, boundary, or repeated request.
+
+## Merge decision
+
+- [ ] I understand the code well enough to maintain it.
+- [ ] I would be comfortable debugging this in production.
+- [ ] The PR is small enough to revert safely.
+```
+
+That last section is the one that matters most.
+
+If you cannot explain the code, you are not reviewing it. You are approving its appearance.
+
+## Know when to close the pull request
+
+Not every generated pull request deserves a rescue mission.
+
+Close it and rewrite the task when:
+
+- the diff is much larger than the requested change
+- the architecture changed without a clear need
+- tests were rewritten around broken behavior
+- sensitive code moved in a direction you do not understand
+- fixing the pull request would take longer than starting again
+
+Deleting generated work can feel wasteful because the branch appeared so quickly. That is a sunk cost wearing a nice commit message.
+
+The point of an overnight agent is to buy useful progress. Sometimes useful progress is a merge. Sometimes it is a concrete example of what the task was missing.
+
+## A good morning PR is easy to challenge
+
+The best AI-written pull request is not the one that looks the most complete. It is the one that is scoped tightly enough to question.
+
+You can connect each changed file to the task. The tests make claims you can understand. The risky paths are visible. The checks are green for reasons you trust. If something goes wrong, the change is small enough to back out.
+
+That is reviewable progress.
+
+And reviewable progress is what you want waiting in the morning.
